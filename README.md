@@ -91,7 +91,7 @@ Image showing example output in a directory with a .url file open:
 
 Image showing the generated .rtf run on a Windows 10 VM, generating NTLMv2 hashes for Responder.
 
-![Demo](docs/demo?raw=true "Demo")
+![Demo](docs/demo.png?raw=true "Demo")
 
 
 Here is an example of what a run looks like generating only modern files:
