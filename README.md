@@ -85,7 +85,13 @@ Created: test/zoom-attack-instructions.txt (PASTE TO CHAT)
 Generation Complete.
 ```
 
+Image showing example output in a directory with a .url file open:
+
 ![Example Run](docs/example-run.png?raw=true "Example Run")
+
+Image showing the generated .rtf run on a Windows 10 VM, generating NTLMv2 hashes for Responder.
+
+![Demo](docs/demo?raw=true "Demo")
 
 
 Here is an example of what a run looks like generating only modern files:
