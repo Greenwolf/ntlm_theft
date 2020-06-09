@@ -85,7 +85,7 @@ Created: test/zoom-attack-instructions.txt (PASTE TO CHAT)
 Generation Complete.
 ```
 
-![Example Run](example-run.png?raw=true "Example Run")
+![Example Run](doc/example-run.png?raw=true "Example Run")
 
 
 Here is an example of what a run looks like generating only modern files:
