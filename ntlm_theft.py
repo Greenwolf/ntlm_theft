@@ -61,7 +61,7 @@ parser.add_argument('-g', '--generate',
 		"desktopini")),
     help='Choose to generate all files or a specific filetype')
 parser.add_argument('-s', '--server',action='store', dest='server',required=True,
-    help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, Metasploit auxiliary/server/capture/smb, etc)')
+    help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, etc)')
 parser.add_argument('-f', '--filename',action='store', dest='filename',required=True,
     help='The base filename without extension, can be renamed later (test, Board-Meeting2020, Bonus_Payment_Q4)')
 args = parser.parse_args()
