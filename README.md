@@ -31,6 +31,7 @@ ntlm_theft supports the following attack types:
 * Click Link in Chat Program
 	* .txt – formatted link to paste into Zoom chat
 
+More information can be found in this [blogpost](https://medium.com/greenwolf-security/ntlm-theft-a-file-payload-generator-for-forced-ntlm-hash-disclosure-2d5f1fe5b964).
 
 ## Usecases (Why you want to run this)
 
