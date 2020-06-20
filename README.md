@@ -2,9 +2,9 @@
 
 A tool for generating multiple types of NTLMv2 hash theft files.
 
-ntlm_theft is an Open Source Python3 Tool that generates 18 different types of hash theft documents. These can be used for phishing when either the target allows smb traffic outside their network, or if you are already inside the internal network. 
+ntlm_theft is an Open Source Python3 Tool that generates 20 different types of hash theft documents. These can be used for phishing when either the target allows smb traffic outside their network, or if you are already inside the internal network. 
 
-The benefits of these file types over say macro based documents or exploit documents are that all of these are built using "intended functionality". None were flagged by Windows Defender Antivirus in June 2020, and 14 of the 18 attacks worked on a fully patched Windows 10 host.  
+The benefits of these file types over say macro based documents or exploit documents are that all of these are built using "intended functionality". None were flagged by Windows Defender Antivirus on June 2020, and 16 of the 20 attacks worked on a fully patched Windows 10 host.  
 
 ntlm_theft supports the following attack types:
 
@@ -22,6 +22,7 @@ ntlm_theft supports the following attack types:
 	* .docx – via Microsoft Word external template
 	* .docx – via Microsoft Word frameset webSettings
 	* .xlsx - via Microsoft Excel external cell
+	* .wax - via Windows Media Player playlist (Better, primary open)
 	* .asx – via Windows Media Player playlist (Better, primary open)
 	* .m3u – via Windows Media Player playlist (Worse, Win10 opens first in Groovy)
 	* .jnlp – via Java external jar
@@ -31,7 +32,6 @@ ntlm_theft supports the following attack types:
 * Click Link in Chat Program
 	* .txt – formatted link to paste into Zoom chat
 
-More information can be found in this [blogpost](https://medium.com/greenwolf-security/ntlm-theft-a-file-payload-generator-for-forced-ntlm-hash-disclosure-2d5f1fe5b964).
 
 ## Usecases (Why you want to run this)
 
@@ -86,13 +86,7 @@ Created: test/zoom-attack-instructions.txt (PASTE TO CHAT)
 Generation Complete.
 ```
 
-Image showing example output in a directory with a .url file open:
-
-![Example Run](docs/example-run.png?raw=true "Example Run")
-
-Image showing the generated .rtf run on a Windows 10 VM, generating NTLMv2 hashes for Responder.
-
-![Demo](docs/demo.png?raw=true "Demo")
+![Example Run](example-run.png?raw=true "Example Run")
 
 
 Here is an example of what a run looks like generating only modern files:
@@ -129,10 +123,6 @@ Created: Bonus_Payment_Q4/Bonus_Payment_Q4-(externalcell).xlsx (OPEN)
 Generation Complete.
 ```
 
-## Future Updates
-
-* Add another parameter to change path & file which is requested to user specified to further avoid detections.
-
 ## Authors
 
 * **Jacob Wilkin** - *Research and Development*
@@ -161,3 +151,4 @@ GNU General Public License for more details.
 * [deepzec](https://github.com/deepzec/Bad-Pdf/blob/master/badpdf.py)
 * [rocketscientist911](https://github.com/rocketscientist911/excel-ntlmv2)
 * [Osanda](https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/)
+* [Violation Industry](https://www.youtube.com/watch?v=PDpBEY1roRc)
