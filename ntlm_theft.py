@@ -432,7 +432,7 @@ def create_lnk(generate,server,filename):
 # create folder to hold templates, if already exists delete it
 if os.path.exists(args.filename):
 	if input(f"Are you sure to want to delete {args.filename}? [Y/N]").lower not in ["y", "yes"]:
-		sys.exit(0)
+		exit(0)
 	shutil.rmtree(args.filename)
 os.makedirs(args.filename)
 
