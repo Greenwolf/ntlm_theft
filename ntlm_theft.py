@@ -28,6 +28,7 @@ import io
 import os
 import shutil
 import xlsxwriter
+from sys import exit
 
 #arg parser to generate all or one file
 #python ntlm_theft --generate all --ip 127.0.0.1 --filename board-meeting2020
@@ -430,6 +431,8 @@ def create_lnk(generate,server,filename):
 
 # create folder to hold templates, if already exists delete it
 if os.path.exists(args.filename):
+	if input(f"Are you sure to want to delete {args.filename}? [Y/N]").lower not in ["y", "yes"]:
+		exit(0)
 	shutil.rmtree(args.filename)
 os.makedirs(args.filename)
 
