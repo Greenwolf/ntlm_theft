@@ -1,4 +1,5 @@
-#!/usr/bin/env 
+#!/usr/local/bin/python3.11
+
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
@@ -30,6 +31,9 @@ import os
 import shutil
 import xlsxwriter
 from sys import exit
+
+# custom
+from custom.odt_gen import create_odt
 
 #the basic path of the script, make it possible to run from anywhere
 script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -67,6 +71,7 @@ parser.add_argument('-g', '--generate',
 		"zoom",
 		"libraryms",
 		"autoruninf",
+		"odt",
 		"desktopini")),
     help='Choose to generate all files or a specific filetype')
 parser.add_argument('-s', '--server',action='store', dest='server',required=True,
@@ -600,6 +605,9 @@ if (args.generate == "all" or args.generate == "modern"):
 
 	create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
 
+	# custom
+	create_odt(args.server, os.path.join(args.filename, args.filename + ".odt"))
+
 	create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
 
 	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
@@ -664,5 +672,9 @@ elif(args.generate == "desktopini"):
 
 elif(args.generate == "theme"):
 	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+
+# create_odt(lhost, filename)
+elif(args.generate == "odt"):
+	create_odt(args.server, os.path.join(args.filename, args.filename + ".odt"))
 
 print("Generation Complete.")
