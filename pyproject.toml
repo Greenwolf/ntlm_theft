@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ntlm_theft"
+version = "0.1.0"
+description = "Generate files for forced NTLM authentication / hash capture"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.7"
+dependencies = [
+    "xlsxwriter",
+]
+
+[project.scripts]
+ntlm_theft = "ntlm_theft:main"
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "ntlm_theft.py",
+    "templates/**",
+]
+
+[tool.hatch.build.targets.wheel.sources]
+"." = "ntlm_theft"
