@@ -2,9 +2,9 @@
 
 A tool for generating multiple types of NTLMv2 hash theft files.
 
-ntlm_theft is an Open Source Python3 Tool that generates 21 different types of hash theft documents. These can be used for phishing when either the target allows smb traffic outside their network, or if you are already inside the internal network. 
+ntlm_theft is an Open Source Python3 Tool that generates 21 different types of hash theft documents. These can be used for phishing when either the target allows smb traffic outside their network, or if you are already inside the internal network.
 
-The benefits of these file types over say macro based documents or exploit documents are that all of these are built using "intended functionality". None were flagged by Windows Defender Antivirus on June 2020, and 17 of the 21 attacks worked on a fully patched Windows 10 host.  
+The benefits of these file types over say macro based documents or exploit documents are that all of these are built using "intended functionality". None were flagged by Windows Defender Antivirus on June 2020, and 17 of the 21 attacks worked on a fully patched Windows 10 host.
 
 ntlm_theft supports the following attack types:
 
@@ -44,7 +44,7 @@ I've found it useful while penetration testing to easily see what file types I h
 
 These instructions will show you the requirements for and how to use ntlm_theft.
 
-### Prerequisites
+## Prerequisites
 
 ntlm_theft requires Python3 and xlsxwriter:
 
@@ -52,7 +52,17 @@ ntlm_theft requires Python3 and xlsxwriter:
 pip3 install xlsxwriter
 ```
 
-### Required Parameters
+
+## Pipx Installation (For easier package package management)
+
+```
+pipx install git+https://github.com/Greenwolf/ntlm_theft
+```
+
+### Pipx Uninstall
+```
+pipx uninstall ntlm_theft
+```
 
 To start up the tool 4 parameters must be provided, an input format, the input file or folder and the basic running mode:
 
@@ -133,7 +143,7 @@ Generation Complete.
 ntlm_theft
 Created by Jacob Wilkin
 Copyright (C) 2020 Jacob Wilkin
- 
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -154,3 +164,4 @@ GNU General Public License for more details.
 * [Osanda](https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/)
 * [Violation Industry](https://www.youtube.com/watch?v=PDpBEY1roRc)
 * [@kazkansouh](https://github.com/kazkansouh) - Adding .lnk support
+* [@schlop](https://github.com/schlopshow) - Added pipx installation method

