@@ -19,6 +19,7 @@ ntlm_theft = "ntlm_theft:main"
 [tool.hatch.build.targets.wheel]
 include = [
     "ntlm_theft.py",
+    "custom/**",
     "templates/**",
 ]
 

