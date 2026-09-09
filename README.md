@@ -2,7 +2,7 @@
 
 A tool for generating multiple types of NTLMv2 hash theft files.
 
-ntlm_theft is an Open Source Python3 Tool that generates 22 different types of hash theft documents. These can be used for phishing when either the target allows smb traffic outside their network, or if you are already inside the internal network.
+ntlm_theft is an Open Source Python3 Tool that generates 23 different types of hash theft documents. These can be used for phishing when either the target allows smb traffic outside their network, or if you are already inside the internal network.
 
 The benefits of these file types over say macro based documents or exploit documents are that all of these are built using "intended functionality". None were flagged by Windows Defender Antivirus on June 2020, and 17 of the 21 attacks worked on a fully patched Windows 10 host.
 
@@ -15,6 +15,7 @@ ntlm_theft supports the following attack types:
 	* .scf – via ICONFILE field (Not Working on Latest Windows)
 	* autorun.inf via OPEN field (Not Working on Latest Windows)
 	* desktop.ini - via IconResource field (Not Working on Latest Windows)
+	* .bat – Windows command script
 * Open Document
 	* .xml – via Microsoft Word external stylesheet
 	* .xml – via Microsoft Word includepicture field
